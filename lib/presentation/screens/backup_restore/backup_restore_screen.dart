@@ -72,7 +72,14 @@ class _BackupRestoreScreenState extends State<BackupRestoreScreen> {
   }
 
   Future<void> _handleBackup(String email, String password) async {
+    if (!mounted) return;
+
     try {
+      // Get all tasks from provider before any async operations
+      final taskProvider = Provider.of<TaskProvider>(context, listen: false);
+      final tasks = taskProvider.tasks;
+      final navigator = Navigator.of(context);
+
       // First, authenticate
       final authResult = await _backupService.createOrLoginAccount(
         email: email,
@@ -87,10 +94,6 @@ class _BackupRestoreScreenState extends State<BackupRestoreScreen> {
         return;
       }
 
-      // Get all tasks from provider
-      final taskProvider = Provider.of<TaskProvider>(context, listen: false);
-      final tasks = taskProvider.tasks;
-
       // Backup tasks
       final backupResult = await _backupService.backupTasks(
         email: email,
@@ -99,7 +102,7 @@ class _BackupRestoreScreenState extends State<BackupRestoreScreen> {
 
       if (mounted) {
         // Close dialog only on success or backup failure (not auth failure)
-        Navigator.pop(context);
+        navigator.pop();
 
         if (backupResult.success) {
           _showSuccessSnackBar('Your data is backed up!');
@@ -109,14 +112,18 @@ class _BackupRestoreScreenState extends State<BackupRestoreScreen> {
       }
     } catch (e) {
       if (mounted) {
-        Navigator.pop(context);
+        Navigator.of(context).pop();
         _showErrorSnackBar('Backup failed: $e');
       }
     }
   }
 
   Future<void> _handleRestore(String email, String password) async {
+    if (!mounted) return;
+
     try {
+      final navigator = Navigator.of(context);
+
       // First, authenticate
       final authResult = await _backupService.createOrLoginAccount(
         email: email,
@@ -136,63 +143,62 @@ class _BackupRestoreScreenState extends State<BackupRestoreScreen> {
 
       if (!restoreResult.success) {
         if (mounted) {
-          Navigator.pop(context);
+          navigator.pop();
           _showErrorSnackBar(restoreResult.message);
         }
         return;
       }
 
       // Show confirmation dialog
-      if (mounted) {
-        Navigator.pop(context);
+      if (!mounted) return;
 
-        final confirmed = await showDialog<bool>(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Restore Confirmation'),
-            content: Text(
-              'Found ${restoreResult.tasks.length} tasks in backup. This will replace all your current tasks. Continue?',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: const Text('Cancel'),
-              ),
-              ElevatedButton(
-                onPressed: () => Navigator.pop(context, true),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary500,
-                  foregroundColor: Colors.white,
-                ),
-                child: const Text('Restore'),
-              ),
-            ],
+      navigator.pop();
+
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('Restore Confirmation'),
+          content: Text(
+            'Found ${restoreResult.tasks.length} tasks in backup. This will replace all your current tasks. Continue?',
           ),
-        );
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary500,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Restore'),
+            ),
+          ],
+        ),
+      );
 
-        if (confirmed == true && mounted) {
-          // Clear current tasks and add restored tasks
-          final taskProvider = Provider.of<TaskProvider>(
-            context,
-            listen: false,
+      if (confirmed == true && mounted) {
+        // Clear current tasks and add restored tasks
+        final taskProvider = Provider.of<TaskProvider>(context, listen: false);
+        await taskProvider.clearAllTasks();
+
+        for (var task in restoreResult.tasks) {
+          await taskProvider.addTask(
+            title: task.title,
+            description: task.description,
+            priority: task.priority,
+            dueDate: task.dueDate,
           );
-          await taskProvider.clearAllTasks();
+        }
 
-          for (var task in restoreResult.tasks) {
-            await taskProvider.addTask(
-              title: task.title,
-              description: task.description,
-              priority: task.priority,
-              dueDate: task.dueDate,
-            );
-          }
-
+        if (mounted) {
           _showSuccessSnackBar('Your data is restored!');
         }
       }
     } catch (e) {
       if (mounted) {
-        Navigator.pop(context);
+        Navigator.of(context).pop();
         _showErrorSnackBar('Restore failed: $e');
       }
     }

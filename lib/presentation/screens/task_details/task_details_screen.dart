@@ -16,10 +16,7 @@ import 'widgets/task_info_card.dart';
 class TaskDetailsScreen extends StatelessWidget {
   final String taskId;
 
-  const TaskDetailsScreen({
-    super.key,
-    required this.taskId,
-  });
+  const TaskDetailsScreen({super.key, required this.taskId});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +44,31 @@ class TaskDetailsScreen extends StatelessWidget {
                 color: isDark ? AppColors.slate700 : AppColors.gray100,
                 borderRadius: BorderRadius.circular(AppDimensions.radiusSm),
               ),
-              child: const Icon(LucideIcons.trash2, size: 20, color: Colors.red),
+              child: Icon(
+                LucideIcons.edit,
+                size: 20,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
+              ),
+            ),
+            onPressed: () {
+              context.push('/edit-task/$taskId');
+            },
+          ),
+          const SizedBox(width: AppDimensions.sm),
+          IconButton(
+            icon: Container(
+              padding: const EdgeInsets.all(AppDimensions.sm),
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.slate700 : AppColors.gray100,
+                borderRadius: BorderRadius.circular(AppDimensions.radiusSm),
+              ),
+              child: const Icon(
+                LucideIcons.trash2,
+                size: 20,
+                color: Colors.red,
+              ),
             ),
             onPressed: () {
               _showDeleteDialog(context, taskId);
@@ -76,102 +97,107 @@ class TaskDetailsScreen extends StatelessWidget {
           return SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(AppDimensions.xl),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Completion Toggle
-                  CompletionToggle(
-                    taskId: task.id,
-                    isCompleted: task.isCompleted,
-                  ),
-                  
-                  const SizedBox(height: AppDimensions.xl),
-                  
-                  // Task Title
-                  Text(
-                    task.title,
-                    style: AppTextStyles.heading2(
-                      color: isDark
-                          ? AppColors.darkTextPrimary
-                          : AppColors.lightTextPrimary,
-                    ),
-                  ),
-                  
-                  const SizedBox(height: AppDimensions.lg),
-                  
-                  // Task Description
-                  if (task.description.isNotEmpty) ...[
-                    Text(
-                      task.description,
-                      style: AppTextStyles.body(
-                        color: isDark
-                            ? AppColors.darkTextSecondary
-                            : AppColors.gray600,
-                      ),
-                    ),
-                    const SizedBox(height: AppDimensions.xl),
-                  ],
-                  
-                  // Priority
-                  TaskInfoCard(
-                    label: 'Priority',
-                    content: PriorityBadge(priority: task.priority),
-                  ),
-                  
-                  const SizedBox(height: AppDimensions.lg),
-                  
-                  // Due Date
-                  TaskInfoCard(
-                    label: 'Due Date',
-                    content: Row(
-                      children: [
-                        Icon(
-                          LucideIcons.calendar,
-                          size: 20,
-                          color: isDark
-                              ? AppColors.darkTextPrimary
-                              : AppColors.lightTextPrimary,
-                        ),
-                        const SizedBox(width: AppDimensions.sm),
-                        Text(
-                          app_date_utils.DateUtils.formatDate(task.dueDate),
-                          style: AppTextStyles.body(
-                            color: isDark
-                                ? AppColors.darkTextPrimary
-                                : AppColors.lightTextPrimary,
+              child:
+                  Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Completion Toggle
+                          CompletionToggle(
+                            taskId: task.id,
+                            isCompleted: task.isCompleted,
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  
-                  const SizedBox(height: AppDimensions.lg),
-                  
-                  // Created Date
-                  TaskInfoCard(
-                    label: 'Created',
-                    content: Text(
-                      app_date_utils.DateUtils.formatDateTime(task.createdAt),
-                      style: AppTextStyles.body(
-                        color: isDark
-                            ? AppColors.darkTextPrimary
-                            : AppColors.lightTextPrimary,
+
+                          const SizedBox(height: AppDimensions.xl),
+
+                          // Task Title
+                          Text(
+                            task.title,
+                            style: AppTextStyles.heading2(
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
+                            ),
+                          ),
+
+                          const SizedBox(height: AppDimensions.lg),
+
+                          // Task Description
+                          if (task.description.isNotEmpty) ...[
+                            Text(
+                              task.description,
+                              style: AppTextStyles.body(
+                                color: isDark
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.gray600,
+                              ),
+                            ),
+                            const SizedBox(height: AppDimensions.xl),
+                          ],
+
+                          // Priority
+                          TaskInfoCard(
+                            label: 'Priority',
+                            content: PriorityBadge(priority: task.priority),
+                          ),
+
+                          const SizedBox(height: AppDimensions.lg),
+
+                          // Due Date
+                          TaskInfoCard(
+                            label: 'Due Date',
+                            content: Row(
+                              children: [
+                                Icon(
+                                  LucideIcons.calendar,
+                                  size: 20,
+                                  color: isDark
+                                      ? AppColors.darkTextPrimary
+                                      : AppColors.lightTextPrimary,
+                                ),
+                                const SizedBox(width: AppDimensions.sm),
+                                Text(
+                                  app_date_utils.DateUtils.formatDate(
+                                    task.dueDate,
+                                  ),
+                                  style: AppTextStyles.body(
+                                    color: isDark
+                                        ? AppColors.darkTextPrimary
+                                        : AppColors.lightTextPrimary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: AppDimensions.lg),
+
+                          // Created Date
+                          TaskInfoCard(
+                            label: 'Created',
+                            content: Text(
+                              app_date_utils.DateUtils.formatDateTime(
+                                task.createdAt,
+                              ),
+                              style: AppTextStyles.body(
+                                color: isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightTextPrimary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                      .animate()
+                      .fadeIn(
+                        duration: AppDimensions.slideUpDuration,
+                        curve: AppDimensions.easeOut,
+                      )
+                      .slideY(
+                        begin: 0.2,
+                        end: 0,
+                        duration: AppDimensions.slideUpDuration,
+                        curve: AppDimensions.easeOut,
                       ),
-                    ),
-                  ),
-                ],
-              )
-                  .animate()
-                  .fadeIn(
-                    duration: AppDimensions.slideUpDuration,
-                    curve: AppDimensions.easeOut,
-                  )
-                  .slideY(
-                    begin: 0.2,
-                    end: 0,
-                    duration: AppDimensions.slideUpDuration,
-                    curve: AppDimensions.easeOut,
-                  ),
             ),
           );
         },
@@ -216,16 +242,17 @@ class TaskDetailsScreen extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                final taskProvider = Provider.of<TaskProvider>(context, listen: false);
+                final taskProvider = Provider.of<TaskProvider>(
+                  context,
+                  listen: false,
+                );
                 taskProvider.deleteTask(taskId);
                 Navigator.of(dialogContext).pop();
                 context.pop();
               },
               child: Text(
                 'Delete',
-                style: AppTextStyles.medium16(
-                  color: Colors.red,
-                ),
+                style: AppTextStyles.medium16(color: Colors.red),
               ),
             ),
           ],

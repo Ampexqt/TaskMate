@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../data/repositories/firestore_task_repository.dart';
-import '../domain/entities/task.dart';
-import '../domain/enums/priority.dart';
+import '../../data/repositories/firestore_task_repository.dart';
+import '../../domain/entities/task.dart';
+import '../../domain/enums/priority.dart';
 
 /// Test screen to verify Firebase Firestore connection
 class FirebaseTestScreen extends StatefulWidget {

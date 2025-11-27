@@ -5,6 +5,7 @@ import '../core/utils/storage_service.dart';
 import '../presentation/screens/onboarding/onboarding_screen.dart';
 import '../presentation/screens/home/home_screen.dart';
 import '../presentation/screens/add_task/add_task_screen.dart';
+import '../presentation/screens/edit_task/edit_task_screen.dart';
 import '../presentation/screens/task_details/task_details_screen.dart';
 import '../presentation/screens/settings/settings_screen.dart';
 import '../presentation/screens/backup_restore/backup_restore_screen.dart';
@@ -13,7 +14,8 @@ class AppRouter {
   static final StorageService _storageService = StorageService();
 
   static Future<String> _determineInitialRoute() async {
-    final hasCompletedOnboarding = await _storageService.hasCompletedOnboarding();
+    final hasCompletedOnboarding = await _storageService
+        .hasCompletedOnboarding();
     return hasCompletedOnboarding
         ? AppConstants.homeRoute
         : AppConstants.onboardingRoute;
@@ -22,8 +24,10 @@ class AppRouter {
   static final GoRouter router = GoRouter(
     initialLocation: AppConstants.homeRoute,
     redirect: (BuildContext context, GoRouterState state) async {
-      final hasCompletedOnboarding = await _storageService.hasCompletedOnboarding();
-      final isOnOnboarding = state.matchedLocation == AppConstants.onboardingRoute;
+      final hasCompletedOnboarding = await _storageService
+          .hasCompletedOnboarding();
+      final isOnOnboarding =
+          state.matchedLocation == AppConstants.onboardingRoute;
 
       // If user hasn't completed onboarding and is not on onboarding screen, redirect to onboarding
       if (!hasCompletedOnboarding && !isOnOnboarding) {
@@ -55,6 +59,13 @@ class AppRouter {
         builder: (context, state) {
           final taskId = state.pathParameters['id']!;
           return TaskDetailsScreen(taskId: taskId);
+        },
+      ),
+      GoRoute(
+        path: '/edit-task/:id',
+        builder: (context, state) {
+          final taskId = state.pathParameters['id']!;
+          return EditTaskScreen(taskId: taskId);
         },
       ),
       GoRoute(

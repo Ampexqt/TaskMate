@@ -36,126 +36,153 @@ class SettingsScreen extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(AppDimensions.xl),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Appearance Section
-              Text(
-                'Appearance',
-                style: AppTextStyles.caption(
-                  color: isDark
-                      ? AppColors.darkTextTertiary
-                      : AppColors.lightTextTertiary,
-                ),
-              ),
-              const SizedBox(height: AppDimensions.md),
-              SettingsListItem(
-                icon: isDark ? LucideIcons.moon : LucideIcons.sun,
-                title: 'Theme',
-                subtitle: isDark ? 'Dark Mode' : 'Light Mode',
-                trailing: Switch(
-                  value: themeProvider.isDarkMode,
-                  onChanged: (_) => themeProvider.toggleTheme(),
-                  activeColor: isDark
-                      ? AppColors.darkAccentPrimary
-                      : AppColors.lightAccentPrimary,
-                ),
-              ),
-              
-              const SizedBox(height: AppDimensions.xl),
-              
-              // Preferences Section
-              Text(
-                'Preferences',
-                style: AppTextStyles.caption(
-                  color: isDark
-                      ? AppColors.darkTextTertiary
-                      : AppColors.lightTextTertiary,
-                ),
-              ),
-              const SizedBox(height: AppDimensions.md),
-              SettingsListItem(
-                icon: LucideIcons.target,
-                title: 'Daily Goals',
-                subtitle: 'Set your daily task goals',
-                onTap: () {
-                  // TODO: Implement daily goals
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Coming soon!')),
-                  );
-                },
-              ),
-              const SizedBox(height: AppDimensions.md),
-              SettingsListItem(
-                icon: LucideIcons.bell,
-                title: 'Notifications',
-                subtitle: 'Manage notification preferences',
-                onTap: () {
-                  // TODO: Implement notifications
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Coming soon!')),
-                  );
-                },
-              ),
-              
-              const SizedBox(height: AppDimensions.xl),
-              
-              // Data Section
-              Text(
-                'Data',
-                style: AppTextStyles.caption(
-                  color: isDark
-                      ? AppColors.darkTextTertiary
-                      : AppColors.lightTextTertiary,
-                ),
-              ),
-              const SizedBox(height: AppDimensions.md),
-              SettingsListItem(
-                icon: LucideIcons.database,
-                title: 'Backup & Restore',
-                subtitle: 'Manage your task data',
-                onTap: () => context.push(AppConstants.backupRestoreRoute),
-              ),
-              
-              const SizedBox(height: AppDimensions.xl2),
-              
-              // Footer
-              Center(
-                child: Column(
-                  children: [
-                    Text(
-                      'Version ${AppConstants.appVersion}',
-                      style: AppTextStyles.bodySmall(
-                        color: isDark
-                            ? AppColors.darkTextTertiary
-                            : AppColors.gray500,
+          child:
+              Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Appearance Section
+                      Text(
+                        'Appearance',
+                        style: AppTextStyles.caption(
+                          color: isDark
+                              ? AppColors.darkTextTertiary
+                              : AppColors.lightTextTertiary,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: AppDimensions.xs),
-                    Text(
-                      AppConstants.appTagline,
-                      style: AppTextStyles.caption(
-                        color: isDark
-                            ? AppColors.darkTextTertiary
-                            : AppColors.gray400,
+                      const SizedBox(height: AppDimensions.md),
+                      SettingsListItem(
+                        icon: isDark ? LucideIcons.moon : LucideIcons.sun,
+                        title: 'Theme',
+                        subtitle: isDark ? 'Dark Mode' : 'Light Mode',
+                        trailing: Switch(
+                          value: themeProvider.isDarkMode,
+                          onChanged: (_) => themeProvider.toggleTheme(),
+                          thumbColor: WidgetStateProperty.resolveWith<Color>((
+                            Set<WidgetState> states,
+                          ) {
+                            if (states.contains(WidgetState.selected)) {
+                              return isDark
+                                  ? AppColors.darkAccentPrimary
+                                  : AppColors.lightAccentPrimary;
+                            }
+                            return isDark
+                                ? AppColors.gray600
+                                : AppColors.gray400;
+                          }),
+                          trackColor: WidgetStateProperty.resolveWith<Color>((
+                            Set<WidgetState> states,
+                          ) {
+                            if (states.contains(WidgetState.selected)) {
+                              return isDark
+                                  ? AppColors.darkAccentPrimary.withValues(
+                                      alpha: 0.5,
+                                    )
+                                  : AppColors.lightAccentPrimary.withValues(
+                                      alpha: 0.5,
+                                    );
+                            }
+                            return isDark
+                                ? AppColors.gray700
+                                : AppColors.gray300;
+                          }),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          )
-              .animate()
-              .fadeIn(
-                duration: AppDimensions.slideUpDuration,
-                curve: AppDimensions.easeOut,
-              )
-              .slideY(
-                begin: 0.2,
-                end: 0,
-                duration: AppDimensions.slideUpDuration,
-                curve: AppDimensions.easeOut,
-              ),
+
+                      const SizedBox(height: AppDimensions.xl),
+
+                      // Preferences Section
+                      Text(
+                        'Preferences',
+                        style: AppTextStyles.caption(
+                          color: isDark
+                              ? AppColors.darkTextTertiary
+                              : AppColors.lightTextTertiary,
+                        ),
+                      ),
+                      const SizedBox(height: AppDimensions.md),
+                      SettingsListItem(
+                        icon: LucideIcons.target,
+                        title: 'Daily Goals',
+                        subtitle: 'Set your daily task goals',
+                        onTap: () {
+                          // TODO: Implement daily goals
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Coming soon!')),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: AppDimensions.md),
+                      SettingsListItem(
+                        icon: LucideIcons.bell,
+                        title: 'Notifications',
+                        subtitle: 'Manage notification preferences',
+                        onTap: () {
+                          // TODO: Implement notifications
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Coming soon!')),
+                          );
+                        },
+                      ),
+
+                      const SizedBox(height: AppDimensions.xl),
+
+                      // Data Section
+                      Text(
+                        'Data',
+                        style: AppTextStyles.caption(
+                          color: isDark
+                              ? AppColors.darkTextTertiary
+                              : AppColors.lightTextTertiary,
+                        ),
+                      ),
+                      const SizedBox(height: AppDimensions.md),
+                      SettingsListItem(
+                        icon: LucideIcons.database,
+                        title: 'Backup & Restore',
+                        subtitle: 'Manage your task data',
+                        onTap: () =>
+                            context.push(AppConstants.backupRestoreRoute),
+                      ),
+
+                      const SizedBox(height: AppDimensions.xl2),
+
+                      // Footer
+                      Center(
+                        child: Column(
+                          children: [
+                            Text(
+                              'Version ${AppConstants.appVersion}',
+                              style: AppTextStyles.bodySmall(
+                                color: isDark
+                                    ? AppColors.darkTextTertiary
+                                    : AppColors.gray500,
+                              ),
+                            ),
+                            const SizedBox(height: AppDimensions.xs),
+                            Text(
+                              AppConstants.appTagline,
+                              style: AppTextStyles.caption(
+                                color: isDark
+                                    ? AppColors.darkTextTertiary
+                                    : AppColors.gray400,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                  .animate()
+                  .fadeIn(
+                    duration: AppDimensions.slideUpDuration,
+                    curve: AppDimensions.easeOut,
+                  )
+                  .slideY(
+                    begin: 0.2,
+                    end: 0,
+                    duration: AppDimensions.slideUpDuration,
+                    curve: AppDimensions.easeOut,
+                  ),
         ),
       ),
     );
