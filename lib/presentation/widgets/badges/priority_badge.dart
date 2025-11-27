@@ -28,18 +28,26 @@ class PriorityBadge extends StatelessWidget {
         textColor = isDark ? AppColors.darkTextPrimary : AppColors.green700;
         break;
       case Priority.medium:
-        backgroundColor = isDark ? AppColors.amber700 : AppColors.lightPriorityMediumBg;
-        textColor = isDark ? AppColors.darkTextPrimary : AppColors.lightPriorityMediumText;
+        backgroundColor = isDark
+            ? AppColors.amber700
+            : AppColors.lightPriorityMediumBg;
+        textColor = isDark
+            ? AppColors.darkTextPrimary
+            : AppColors.lightPriorityMediumText;
         break;
       case Priority.high:
-        backgroundColor = isDark ? AppColors.red700 : AppColors.lightPriorityHighBg;
-        textColor = isDark ? AppColors.darkTextPrimary : AppColors.lightPriorityHighText;
+        backgroundColor = isDark
+            ? AppColors.red700
+            : AppColors.lightPriorityHighBg;
+        textColor = isDark
+            ? AppColors.darkTextPrimary
+            : AppColors.lightPriorityHighText;
         break;
     }
 
     final badge = Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: AppDimensions.md,
+        horizontal: AppDimensions.sm,
         vertical: AppDimensions.xs,
       ),
       decoration: BoxDecoration(
@@ -48,7 +56,12 @@ class PriorityBadge extends StatelessWidget {
       ),
       child: Text(
         priority.displayName,
-        style: AppTextStyles.caption(color: textColor),
+        style: AppTextStyles.caption(
+          color: textColor,
+        ).copyWith(fontSize: 10, letterSpacing: 0.2),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.center,
       ),
     );
 

@@ -31,7 +31,7 @@ class PrioritySelector extends StatelessWidget {
               onTap: () => onPriorityChanged(priority),
               child: AnimatedContainer(
                 duration: AppDimensions.hoverLiftDuration,
-                padding: const EdgeInsets.all(AppDimensions.lg),
+                padding: const EdgeInsets.all(AppDimensions.md),
                 decoration: BoxDecoration(
                   color: isSelected
                       ? (isDark
