@@ -40,6 +40,18 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+
+    // Customize APK output name
+    applicationVariants.all {
+        outputs.all {
+            val outputImpl = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+            val version = versionName
+            val buildType = buildType.name
+            
+            // Set APK name: TaskMate-release.apk or TaskMate-debug.apk
+            outputImpl.outputFileName = "TaskMate-${buildType}.apk"
+        }
+    }
 }
 
 flutter {
